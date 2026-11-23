@@ -57,6 +57,18 @@ node scripts\smoke-admin.js                     # 8 проверок админ�
 node scripts\oc-check.js --json                 # самопроверка сборки (20 проверок)
 ```
 
+## Проверка навыков (SkillEvaluator)
+
+Навыки можно прогонять через [NVIDIA SkillEvaluator](https://github.com/NVIDIA/SkillEvaluator) — он проверяет схему, качество и совместимость с OpenCode:
+
+```powershell
+uv tool install --python 3.13 skillevaluator==1.0.1
+skillevaluator harness-check ./skills --harness opencode -v
+skillevaluator validate ./skills --profile default --tiers 1 --checks schema,quality -c -r json,markdown -o reports --min-score 70
+```
+
+Если `skillevaluator` не находится в PATH, используйте `%USERPROFILE%\.local\bin\skillevaluator.exe` или `uv tool update-shell`. Workflow `.github/workflows/skills.yml` запускает тот же гейт при изменении `skills/**`; `harness-check` — информационный, `validate` — блокирующий.
+
 ## Безопасность
 
 - Секреты не хранятся в репозитории: ключ Obsidian-прокси читается из `data.json` плагина в vault, в конфиге OpenCode только `http://127.0.0.1:27125/mcp/`.

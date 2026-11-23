@@ -1,5 +1,5 @@
 ---
-name: OpenCode Tuner
+name: opencode-tuner
 description: Безопасно менять конфигурацию OpenCode, ставить и подключать навыки, команды, агенты, MCP и плагины, проверять сервис. Использовать для любых изменений ~/.config/opencode.
 ---
 

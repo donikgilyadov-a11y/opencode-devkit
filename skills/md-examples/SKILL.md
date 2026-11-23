@@ -1,5 +1,5 @@
 ---
-name: MD Examples
+name: md-examples
 description: Готовые рабочие шаблоны Markdown для OpenCode — AGENTS.md, SKILL.md, команды, агенты, opencode.jsonc. Использовать, когда нужно создать или проверить MD-конфиг OpenCode.
 ---
 
@@ -40,7 +40,7 @@ description: Что делает
 agent: general
 ---
 
-Сделай $ARGUMENTS.
+Сделай то, что просит пользователь.
 ```
 
 Агент:

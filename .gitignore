@@ -9,3 +9,6 @@ brain/reports/
 brain/graphs/
 brain/.obsidian/
 .DS_Store
+reports/
+harness.json
+
