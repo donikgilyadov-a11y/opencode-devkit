@@ -71,6 +71,8 @@ Start-Process -FilePath 'C:\Program Files\nodejs\node.exe' `
 & 'C:\Program Files\nodejs\npm.cmd' test
 node scripts\smoke-admin.js
 node scripts\oc-check.js --json
+node scripts\oc-doctor.js --json          # план авто-врача, ничего не меняет
+node scripts\oc-doctor.js --apply --json  # применить фиксы с бэкапами
 ```
 
 ## Откат

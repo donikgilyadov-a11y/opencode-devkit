@@ -10,7 +10,7 @@
 | --- | --- |
 | `plugins/` | 5 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools` |
 | `skills/` | 9 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian` |
-| `commands/` | 11 глобальных команд (`/brain`, `/oc-check`, `/repo-audit`, …) |
+| `commands/` | 12 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
 | `scripts/` | CLI второго мозга, графов, аудита, самопроверки, дым-теста, Obsidian-прокси и watchdog |
@@ -52,10 +52,22 @@ opencode plugin add opencode-v2-ponytail-scoped@latest
 ## Проверка после установки
 
 ```powershell
-& 'C:\Program Files\nodejs\npm.cmd' test        # 13 юнит-тестов
+& 'C:\Program Files\nodejs\npm.cmd' test        # 18 юнит-тестов
 node scripts\smoke-admin.js                     # 8 проверок админки (нужен запущенный сервер)
 node scripts\oc-check.js --json                 # самопроверка сборки (20 проверок)
 ```
+
+## Авто-врач
+
+`scripts/oc-doctor.js` показывает план и применяет типовые фиксы. По умолчанию только план:
+
+```powershell
+node scripts\oc-doctor.js --json                 # что можно починить
+node scripts\oc-doctor.js --apply --json         # применить с бэкапами
+node scripts\oc-doctor.js --apply --json --service  # ещё и перезапустить сервис
+```
+
+В OpenCode для этого есть команды `/oc-doctor` (план, только чтение) и `/oc-doctor-fix` (применение). Ручные пункты (битые ссылки вики, посторонние символы, выключенный Obsidian) не трогаются автоматически — врач только показывает их. Бэкапы складываются в `brain/reports/doctor-backups/<время>/`.
 
 ## Проверка навыков (SkillEvaluator)
 

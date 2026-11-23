@@ -1,10 +1,10 @@
 ---
-description: Диагностика OpenCode — версия, сервис, API
+description: План авто-врача OpenCode — что можно починить
 agent: oc-admin
 ---
 
-Проверь состояние OpenCode. Данные:
+Запусти диагностику в режиме плана (ничего не меняется):
 
-!`& "$env:LOCALAPPDATA\Programs\@opencode-aidesktop\resources\opencode-cli.exe" --version; & "$env:LOCALAPPDATA\Programs\@opencode-aidesktop\resources\opencode-cli.exe" service status; & "$env:LOCALAPPDATA\Programs\@opencode-aidesktop\resources\opencode-cli.exe" api get /api/info`
+!`& 'C:\Program Files\nodejs\node.exe' "$env:USERPROFILE\Desktop\opencode-boost\scripts\oc-doctor.js" --json`
 
-Выведи краткий отчёт: версия, жив ли сервис, issue ли ошибки. Если что-то не так — предложи действие.
+Кратко перечисли найденные действия, их тип (`auto` — чинится автоматически, `manual` — нужно вручную) и детали. Если действий нет, скажи «всё здорово». Для реального исправления предложи `/oc-doctor-fix`.
