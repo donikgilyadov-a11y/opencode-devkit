@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 13 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices` |
+| `skills/` | 14 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite` |
 | `commands/` | 13 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -101,6 +101,15 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 Три внешних навыка для связки TypeScript + React прошли тот же гейт: `react-expert`, `typescript-pro`, `react-best-practices`. Проверка совместимости: `harness-check` — 3/3 загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 3/3 прошли, оценки A (90.8–92.0). Повторная проверка всех 13 навыков DevKit тоже прошла: 13/13.
 
 Источники, зафиксированные коммиты и лицензии (все MIT) перечислены в `skills/FRONTEND-ATTRIBUTION.md`. Навыки оставлены без изменений, кроме проверки совместимости с OpenCode V2.
+
+## Глубокое исследование
+
+Два варианта проверены и установлены:
+
+- `deep-research-lite` — лёгкий навык из `FMATheNomad/deep-research-skill` (MIT). Один файл, использует встроенные `websearch`/`webfetch`, параллельную загрузку страниц и структурированный отчёт. В DevKit лежит в `skills/`.
+- `hffmnnj.deep-research@latest` — пакетный плагин V2 (MIT) с постоянной библиотекой исследований, инструментами `tools.research.*` (только Code Mode) и тремя подагентами `deep-research/researcher|verifier|librarian`. Библиотека хранится в `~/.local/share/opencode-deep-research/library/`. Плагин сам регистрирует навык `deep-research`, поэтому файл из его репозитория в `skills/` не копировался.
+
+Оба кандидата прошли SkillEvaluator: `harness-check` — 2/2 загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 2/2 прошли (оценки A 92.0 и B 86.0). Источники и зафиксированные коммиты — в `skills/DEEP-RESEARCH-ATTRIBUTION.md`. Плагин добавляется в конфиг через `opencode plugin add hffmnnj.deep-research@latest`; обновлённый пример есть в `config-examples/opencode.jsonc.example`.
 
 ## CI/CD и релизы
 

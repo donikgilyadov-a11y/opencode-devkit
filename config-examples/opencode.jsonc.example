@@ -32,7 +32,8 @@
     "cc-safety-net@latest",
     "envsitter-guard@latest",
     "@slkiser/opencode-quota@latest",
-    "opencode-v2-ponytail-scoped@latest"
+    "opencode-v2-ponytail-scoped@latest",
+    "hffmnnj.deep-research@latest"
   ],
 
   "mcp": {
