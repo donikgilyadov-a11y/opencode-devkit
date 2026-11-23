@@ -1,0 +1,88 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Версия без префикса v, например 1.1.0"
+        required: true
+        type: string
+      dry_run:
+        description: "Только подготовить заметки, без коммита и релиза"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Prepare and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      VERSION_INPUT: ${{ inputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "22"
+          package-manager-cache: false
+
+      - name: Validate version format
+        run: node -e 'const v=(process.env.VERSION_INPUT||"").trim().replace(/^v/i,"");if(!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(v)){console.error("BAD VERSION:",JSON.stringify(v));process.exit(1)}console.log("VERSION OK:",v)'
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Admin smoke (CI mode)
+        run: npm run smoke:ci
+
+      - name: Prepare VERSION, CHANGELOG and release notes
+        run: node scripts/release.js prepare "$VERSION_INPUT"
+
+      - name: Preview release notes
+        if: ${{ inputs.dry_run }}
+        run: cat release-notes.md
+
+      - name: Commit version and changelog, create tag
+        if: ${{ !inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          VERSION="$(printf '%s' "$VERSION_INPUT" | tr -d '[:space:]' | sed 's/^v//')"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add VERSION CHANGELOG.md
+          git commit -m "chore(release): v${VERSION} [skip ci]"
+          git tag -a "v${VERSION}" -m "v${VERSION}"
+          git push origin HEAD:main
+          git push origin "v${VERSION}"
+
+      - name: Build release archive
+        if: ${{ !inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          VERSION="$(printf '%s' "$VERSION_INPUT" | tr -d '[:space:]' | sed 's/^v//')"
+          git archive --format=zip --output="opencode-devkit-v${VERSION}.zip" "v${VERSION}"
+
+      - name: Create GitHub Release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="$(printf '%s' "$VERSION_INPUT" | tr -d '[:space:]' | sed 's/^v//')"
+          gh release create "v${VERSION}" "opencode-devkit-v${VERSION}.zip" \
+            --title "v${VERSION}" --notes-file release-notes.md

@@ -11,4 +11,6 @@ brain/.obsidian/
 .DS_Store
 reports/
 harness.json
+release-notes.md
+_site/
 

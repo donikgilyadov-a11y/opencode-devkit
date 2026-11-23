@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --test scripts/tests/*.test.js scripts/tests/*.test.mjs",
     "smoke": "node scripts/smoke-admin.js",
+    "smoke:ci": "node scripts/smoke-admin.js --ci",
     "install": "node install.js"
   }
 }

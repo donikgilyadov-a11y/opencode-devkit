@@ -53,7 +53,8 @@ opencode plugin add opencode-v2-ponytail-scoped@latest
 
 ```powershell
 & 'C:\Program Files\nodejs\npm.cmd' test        # 23 юнит-теста
-node scripts\smoke-admin.js                     # 8 проверок админки (нужен запущенный сервер)
+& 'C:\Program Files\nodejs\npm.cmd' run smoke      # 8 проверок админки (нужен запущенный сервер)
+& 'C:\Program Files\nodejs\npm.cmd' run smoke:ci   # 6 проверок + 2 SKIP, сервер поднимается сам
 node scripts\oc-check.js --json                 # самопроверка сборки (20 проверок)
 ```
 
@@ -100,6 +101,23 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 Три внешних навыка для связки TypeScript + React прошли тот же гейт: `react-expert`, `typescript-pro`, `react-best-practices`. Проверка совместимости: `harness-check` — 3/3 загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 3/3 прошли, оценки A (90.8–92.0). Повторная проверка всех 13 навыков DevKit тоже прошла: 13/13.
 
 Источники, зафиксированные коммиты и лицензии (все MIT) перечислены в `skills/FRONTEND-ATTRIBUTION.md`. Навыки оставлены без изменений, кроме проверки совместимости с OpenCode V2.
+
+## CI/CD и релизы
+
+- `.github/workflows/ci.yml` — `npm test` и `npm run smoke:ci` на Node 22 (Ubuntu), без `npm install`/`npm ci`: в репозитории нет lockfile, а `install.js` — пользовательский скрипт, который в CI запускать нельзя.
+- `.github/workflows/skills.yml` — гейт SkillEvaluator при изменении `skills/**`.
+- `.github/workflows/release.yml` — ручной релиз через `workflow_dispatch`: проверяет semver, обновляет `VERSION` и `CHANGELOG.md`, создаёт тег `vX.Y.Z`, архив и GitHub Release. Есть режим `dry_run`.
+- `.github/dependabot.yml` — ежемесячные обновления GitHub Actions и будущих npm-зависимостей одной группой PR.
+- `.github/workflows/actions.lock` не используется: экшены закреплены по SHA с комментариями версий.
+
+Локальная проверка перед пушем:
+
+```powershell
+npx.cmd --yes github-actionlint .github\workflows\*.yml
+node scripts\release.js prepare 1.1.0 --dry-run
+```
+
+Smoke в CI поднимает `admin/server.js` с тестовыми фикстурами на отдельном порту и пропускает `/api/data` и `/api/oc-check`, которым нужны OpenCode CLI и сервис на `:28894`. Локальный `npm run smoke` по-прежнему проверяет все 8 эндпоинтов работающей админки.
 
 ## Безопасность
 

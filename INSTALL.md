@@ -71,11 +71,14 @@ Start-Process -FilePath 'C:\Program Files\nodejs\node.exe' `
 
 ```powershell
 & 'C:\Program Files\nodejs\npm.cmd' test
-node scripts\smoke-admin.js
+& 'C:\Program Files\nodejs\npm.cmd' run smoke      # локальная админка должна быть запущена
+& 'C:\Program Files\nodejs\npm.cmd' run smoke:ci   # CI-режим: сервер и фикстуры поднимаются сами
 node scripts\oc-check.js --json
 node scripts\oc-doctor.js --json          # план авто-врача, ничего не меняет
 node scripts\oc-doctor.js --apply --json  # применить фиксы с бэкапами
 ```
+
+В GitHub Actions те же проверки запускают `.github/workflows/ci.yml` (`npm test` + `npm run smoke:ci`) и `.github/workflows/skills.yml`. Релиз создаётся вручную через `.github/workflows/release.yml`: он обновит `VERSION`/`CHANGELOG.md`, поставит тег `vX.Y.Z` и опубликует архив.
 
 ## Откат
 
