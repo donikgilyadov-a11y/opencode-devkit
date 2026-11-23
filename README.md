@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 10 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit` |
+| `skills/` | 13 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices` |
 | `commands/` | 13 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -94,6 +94,12 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 ```
 
 Если `skillevaluator` не находится в PATH, используйте `%USERPROFILE%\.local\bin\skillevaluator.exe` или `uv tool update-shell`. Workflow `.github/workflows/skills.yml` запускает тот же гейт при изменении `skills/**`; `harness-check` — информационный, `validate` — блокирующий.
+
+## Фронтенд-навыки
+
+Три внешних навыка для связки TypeScript + React прошли тот же гейт: `react-expert`, `typescript-pro`, `react-best-practices`. Проверка совместимости: `harness-check` — 3/3 загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 3/3 прошли, оценки A (90.8–92.0). Повторная проверка всех 13 навыков DevKit тоже прошла: 13/13.
+
+Источники, зафиксированные коммиты и лицензии (все MIT) перечислены в `skills/FRONTEND-ATTRIBUTION.md`. Навыки оставлены без изменений, кроме проверки совместимости с OpenCode V2.
 
 ## Безопасность
 
