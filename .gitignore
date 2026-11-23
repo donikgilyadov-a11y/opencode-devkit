@@ -1,0 +1,11 @@
+node_modules/
+logs/
+*.log
+*.pid
+.bak-*
+*.bak-*
+brain/memory/20*.md
+brain/reports/
+brain/graphs/
+brain/.obsidian/
+.DS_Store

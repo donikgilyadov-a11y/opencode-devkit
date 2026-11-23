@@ -1,0 +1,11 @@
+{
+  "name": "opencode-devkit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Набор расширений для OpenCode V2: навыки, команды, агенты, локальные плагины, админка и инструменты",
+  "scripts": {
+    "test": "node --test scripts/tests/*.test.js scripts/tests/*.test.mjs",
+    "smoke": "node scripts/smoke-admin.js",
+    "install": "node install.js"
+  }
+}

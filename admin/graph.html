@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%2358a6ff'/%3E%3C/svg%3E">
+<title>Графы — OpenCode Admin</title>
+<style>
+  :root{--bg:#0d1117;--card:#161b22;--line:#30363d;--fg:#e6edf3;--muted:#8b949e;--accent:#58a6ff}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
+  header{padding:18px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  header h1{font-size:19px;margin:0}
+  header a{color:var(--accent);text-decoration:none;margin-left:auto;font-size:13px}
+  main{display:grid;grid-template-columns:280px 1fr;gap:18px;padding:22px 28px;height:calc(100vh - 64px)}
+  aside,.view{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto}
+  aside h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 10px}
+  .item{display:block;width:100%;text-align:left;background:none;border:1px solid transparent;border-radius:6px;color:var(--fg);padding:9px 10px;cursor:pointer;margin-bottom:6px;font-size:13px}
+  .item:hover{border-color:var(--line);background:#1c2128}
+  .item.active{border-color:var(--accent);background:#132236}
+  .item small{display:block;color:var(--muted);font-size:11px}
+  .meta{color:var(--muted);font-size:12px;margin-bottom:12px}
+  pre{white-space:pre-wrap;word-break:break-word;font-size:12px;color:var(--muted);background:#0d1117;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .svg-wrap svg{max-width:100%;height:auto}
+  .err{color:#f85149}
+</style>
+</head>
+<body>
+<header>
+  <h1>Графы OpenCode</h1>
+  <a href="/">← в админку</a>
+</header>
+<main>
+  <aside>
+    <h2>Сохранённые графы</h2>
+    <div id="list">загрузка…</div>
+  </aside>
+  <section class="view">
+    <div class="meta" id="meta">Выберите граф слева</div>
+    <div class="svg-wrap" id="canvas"></div>
+    <pre id="raw" style="display:none"></pre>
+  </section>
+</main>
+<script type="module">
+let mermaid = null;
+try {
+  const mod = await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs");
+  mermaid = mod.default;
+  mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "loose" });
+} catch (e) {
+  console.warn("Mermaid CDN недоступен, покажу исходник", e);
+}
+
+let current = null;
+const list = document.getElementById("list");
+const meta = document.getElementById("meta");
+const canvas = document.getElementById("canvas");
+const raw = document.getElementById("raw");
+
+function show(item) {
+  current = item.name;
+  document.querySelectorAll(".item").forEach(b => b.classList.toggle("active", b.dataset.name === item.name));
+  meta.textContent = `${item.name} · ${item.kind} · узлов ${item.nodes} · связей ${item.edges}`;
+  canvas.innerHTML = "";
+  raw.style.display = "none";
+  if (!mermaid) {
+    raw.style.display = "block";
+    raw.textContent = item.mermaid;
+    return;
+  }
+  mermaid.render("graph-" + Date.now(), item.mermaid).then(({ svg }) => {
+    canvas.innerHTML = svg;
+  }).catch((e) => {
+    raw.style.display = "block";
+    raw.textContent = "Ошибка рендера: " + e.message + "\n\n" + item.mermaid;
+  });
+}
+
+async function load() {
+  try {
+    const data = await (await fetch("/api/graphs", { cache: "no-store" })).json();
+    list.innerHTML = "";
+    if (!data.items.length) {
+      list.innerHTML = '<div class="meta">Графов пока нет. Создайте их командой /graph-memory или /graph-project.</div>';
+      canvas.innerHTML = "";
+      return;
+    }
+    for (const item of data.items) {
+      const b = document.createElement("button");
+      b.className = "item" + (item.name === current ? " active" : "");
+      b.dataset.name = item.name;
+      b.innerHTML = `${item.name}<small>${item.kind} · ${item.nodes} узлов · ${item.edges} связей</small>`;
+      b.onclick = () => show(item);
+      list.appendChild(b);
+    }
+    if (!current) show(data.items[0]);
+  } catch (e) {
+    list.innerHTML = '<div class="err">Ошибка: ' + e.message + "</div>";
+  }
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

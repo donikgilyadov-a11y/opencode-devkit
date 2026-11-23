@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%2358a6ff'/%3E%3C/svg%3E">
+<title>OpenCode Admin — вторая админка</title>
+<style>
+  :root{--bg:#0d1117;--card:#161b22;--line:#30363d;--fg:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
+  header{padding:20px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  h1{font-size:20px;margin:0}
+  .sub{color:var(--muted);font-size:12px}
+  .spacer{flex:1}
+  button{background:#21262d;color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:7px 12px;cursor:pointer;font-size:13px}
+  button:hover{border-color:var(--accent)}
+  main{padding:24px 28px;max-width:1400px;margin:0 auto}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-height:120px}
+  .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 12px}
+  .kv{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px dashed #21262d}
+  .kv:last-child{border-bottom:0}
+  .k{color:var(--muted)}
+  .v{text-align:right;word-break:break-all}
+  .ok{color:var(--green)} .err{color:var(--red)}
+  ul{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto}
+  li{padding:5px 0;border-bottom:1px solid #21262d;display:flex;justify-content:space-between;gap:10px}
+  li:last-child{border:0}
+  .tag{font-size:11px;color:var(--accent);border:1px solid var(--line);border-radius:10px;padding:0 7px;white-space:nowrap}
+  pre{margin:0;white-space:pre-wrap;word-break:break-word;font-size:12px;color:var(--muted)}
+  footer{padding:16px 28px;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+  a{color:var(--accent)}
+  nav{display:flex;gap:8px;flex-wrap:wrap}
+  nav a{color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:12px}
+  nav a:hover{color:var(--fg);border-color:var(--accent)}
+  .wide{grid-column:1/-1}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>OpenCode Admin</h1>
+    <div class="sub">вторая админка · локальный дашборд · только 127.0.0.1</div>
+  </div>
+  <nav>
+    <a href="#overview">Обзор</a>
+    <a href="#plugins">Плагины</a>
+    <a href="#safety">Безопасность</a>
+    <a href="#logs">Логи</a>
+    <a href="#checks">Проверки</a>
+  </nav>
+  <div class="spacer"></div>
+  <button id="auto">Автообновление: вкл</button>
+  <button id="refresh">Обновить</button>
+  <button id="reload">Reload конфига</button>
+  <button id="check">Проверка</button>
+</header>
+
+<main>
+  <div class="grid" id="overview">
+    <section class="card"><h2>Сервис</h2><div id="info">загрузка…</div></section>
+    <section class="card"><h2>Локация / проект</h2><div id="location"></div></section>
+    <section class="card"><h2>Модель по умолчанию</h2><div id="model"></div></section>
+    <section class="card"><h2>Агенты</h2><ul id="agents"></ul></section>
+    <section class="card"><h2>Навыки и плагины</h2><ul id="plugins"></ul></section>
+    <section class="card"><h2>MCP серверы</h2><ul id="mcp"></ul></section>
+    <section class="card"><h2>Сессии (последние)</h2><ul id="sessions"></ul></section>
+    <section class="card"><h2>Проекты</h2><ul id="projects"></ul></section>
+    <section class="card"><h2>Провайдеры</h2><ul id="providers"></ul></section>
+    <section class="card"><h2>Графы</h2><ul id="graphs"></ul><p style="margin:10px 0 0"><a href="/graph.html">Открыть просмотр графов →</a></p></section>
+    <section class="card"><h2>Самопроверка</h2><div id="checkResult">Нажми «Проверка»</div></section>
+    <section class="card"><h2>Пути</h2><pre>Конфиг: %USERPROFILE%\.config\opencode\opencode.jsonc
+Мозг:    %USERPROFILE%\Desktop\opencode-boost\brain
+Графы:   %USERPROFILE%\Desktop\opencode-boost\brain\graphs
+Логи:    %USERPROFILE%\.local\share\opencode\log\opencode.log</pre></section>
+  </div>
+
+  <div class="grid" style="margin-top:16px">
+    <section class="card" id="plugins"><h2>Плагины (детали)</h2><div id="pluginDetail">загрузка…</div></section>
+    <section class="card" id="safety"><h2>Безопасность и режимы</h2><div id="safetyInfo"></div></section>
+    <section class="card" id="quota"><h2>Квоты</h2><div id="quotaInfo"></div></section>
+    <section class="card" id="obsidian"><h2>Obsidian-мост</h2><div id="obsidianInfo"></div></section>
+    <section class="card"><h2>Память</h2><div id="brainInfo"></div></section>
+    <section class="card wide" id="logs"><h2>Логи сервиса (последние строки)</h2><pre id="logLines">загрузка…</pre></section>
+    <section class="card wide" id="checks"><h2>Отчёт самопроверки</h2><pre id="checkFull">Нажми «Проверка»</pre></section>
+  </div>
+</main>
+<footer>Обновление каждые 15 секунд · <a href="https://opencode.ai/docs/" target="_blank">документация OpenCode</a></footer>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const fmt = (x) => typeof x === "object" && x !== null ? JSON.stringify(x) : String(x ?? "—");
+function kv(k, v, cls=""){ return `<div class="kv"><span class="k">${k}</span><span class="v ${cls}">${v}</span></div>`; }
+function list(el, items, label, tag){
+  if(!Array.isArray(items) || !items.length){ el.innerHTML = `<li><span class="err">пусто</span></li>`; return; }
+  el.innerHTML = items.slice(0,40).map(x => {
+    const name = x?.name || x?.id || x?.modelID || x?.providerID || fmt(x);
+    return `<li><span>${String(name).slice(0,90)}</span>${tag ? `<span class="tag">${tag}</span>` : ""}</li>`;
+  }).join("");
+}
+async function load(){
+  try{
+    const d = await (await fetch("/api/data", {cache:"no-store"})).json();
+    const info = d.info || {};
+    $("info").innerHTML =
+      kv("Версия", fmt(info.version), info.version ? "ok" : "err") +
+      kv("PID", fmt(info.pid)) +
+      kv("Host", fmt(info.hostname)) +
+      kv("URL", fmt((info.urls||[])[0])) +
+      kv("Статус", info.version ? "онлайн" : "нет ответа", info.version ? "ok" : "err");
+    const loc = d.location || {};
+    $("location").innerHTML = kv("Directory", fmt(loc.directory)) + kv("Project", fmt(loc.project?.id)) + kv("Canonical", fmt(loc.project?.canonical));
+    $("model").innerHTML = kv("Модель", fmt(d.defaultModel?.modelID || d.defaultModel?.id || d.defaultModel), "ok");
+    const agents = d.agents;
+    list($("agents"), Array.isArray(agents) ? agents : agents?.agents || agents?.data, null, "агент");
+    list($("plugins"), Array.isArray(d.plugins) ? d.plugins : d.plugins?.plugins || d.plugins?.data, null, "плагин");
+    const mcp = d.mcp;
+    list($("mcp"), Array.isArray(mcp) ? mcp : mcp?.servers ? Object.entries(mcp.servers).map(([k,v])=>({name:k,...v})) : [], null, "mcp");
+    list($("sessions"), d.sessions?.sessions || d.sessions, null, "сессия");
+    list($("projects"), d.projects, null, "проект");
+    list($("providers"), Array.isArray(d.providers) ? d.providers : d.providers?.providers || d.providers?.data, null, "провайдер");
+    try {
+      const g = await (await fetch("/api/graphs", {cache:"no-store"})).json();
+      list($("graphs"), g.items, null, "граф");
+    } catch {}
+    Object.entries(d).forEach(([k,v])=>{ if(v?.error) console.warn(k, v.error); });
+  }catch(e){ $("info").innerHTML = `<span class="err">Ошибка: ${e.message}</span>`; }
+}
+async function loadExtra(){
+  try{
+    const p = await (await fetch("/api/data", {cache:"no-store"})).json();
+    const plugins = Array.isArray(p.plugins) ? p.plugins : p.plugins?.plugins || p.plugins?.data || [];
+    $("pluginDetail").innerHTML = plugins.map(x => {
+      const id = x.id || x.name || fmt(x);
+      const ver = x.source?.version || x.version || "";
+      const state = x.state?.status || x.status || "";
+      return kv(id, (ver ? "v" + ver + " · " : "") + (state || "active"), state === "active" ? "ok" : "");
+    }).join("") || '<span class="err">нет данных</span>';
+    const names = plugins.map(x => x.id || x.name || "").join(" ");
+    $("safetyInfo").innerHTML =
+      kv("cc-safety-net", names.includes("cc-safety-net") ? "активен" : "нет", names.includes("cc-safety-net") ? "ok" : "err") +
+      kv("envsitter-guard", names.includes("envsitter-guard") ? "активен" : "нет", names.includes("envsitter-guard") ? "ok" : "err") +
+      kv("auto-resume", names.includes("auto-resume") ? "активен" : "нет", names.includes("auto-resume") ? "ok" : "err") +
+      kv("ponytail", names.includes("ponytail") ? "установлен (off по умолчанию)" : "нет");
+  }catch(e){ $("pluginDetail").innerHTML = `<span class="err">${e.message}</span>`; }
+  try{ const q = await (await fetch("/api/quota", {cache:"no-store"})).json(); $("quotaInfo").innerHTML = kv("Настройки", q.exists ? "файл есть" : "по умолчанию") + kv("Путь", q.file); }catch(e){ $("quotaInfo").textContent = e.message; }
+  try{ const o = await (await fetch("/api/obsidian", {cache:"no-store"})).json(); $("obsidianInfo").innerHTML =
+      kv("Прокси 27125", o.proxy?.listening ? "работает" : "не отвечает", o.proxy?.listening ? "ok" : "err") +
+      kv("REST 27123", o.rest?.listening ? "работает" : "не отвечает", o.rest?.listening ? "ok" : "err") +
+      kv("Watchdog PID", o.watchdogPid || "не запущен", o.watchdogPid ? "ok" : "err") +
+      kv("Автозапуск", o.autostart ? "в Startup" : "нет", o.autostart ? "ok" : "err"); }catch(e){ $("obsidianInfo").textContent = e.message; }
+  try{ const b = await (await fetch("/api/brain", {cache:"no-store"})).json(); $("brainInfo").innerHTML = kv("MD-файлов", b.files) + `<pre style="margin-top:8px">${String(b.memory || "").split("\n").slice(0,14).join("\n")}</pre>`; }catch(e){ $("brainInfo").textContent = e.message; }
+  try{ const l = await (await fetch("/api/logs?lines=80", {cache:"no-store"})).json(); $("logLines").textContent = (l.lines || []).join("\n"); }catch(e){ $("logLines").textContent = e.message; }
+}
+
+let autoTimer = setInterval(loadAll, 15000);
+function loadAll(){ load(); loadExtra(); }
+let autoOn = true;
+$("auto").onclick = () => {
+  autoOn = !autoOn;
+  $("auto").textContent = "Автообновление: " + (autoOn ? "вкл" : "выкл");
+  clearInterval(autoTimer);
+  if (autoOn) autoTimer = setInterval(loadAll, 15000);
+};
+$("refresh").onclick = loadAll;
+$("check").onclick = async () => {
+  const el = $("checkResult");
+  el.innerHTML = "Проверяю…";
+  try {
+    const r = await (await fetch("/api/oc-check", {cache:"no-store"})).json();
+    const bad = (r.items || []).filter(x => !x.ok);
+    el.innerHTML = kv("Итог", r.ok ? "всё_ok" : `проблем: ${bad.length}`, r.ok ? "ok" : "err") +
+      kv("Проверок", r.total ?? (r.items || []).length) +
+      (bad.length ? bad.map(x => kv(x.name, x.detail, "err")).join("") : '<div class="kv"><span class="k">Все проверки пройдены</span></div>');
+    $("checkFull").textContent = (r.items || []).map(x => `${x.ok ? "OK " : "ERR"} ${x.name}: ${x.detail}`).join("\n");
+  } catch(e) { el.innerHTML = `<span class="err">Ошибка: ${e.message}</span>`; }
+};
+$("reload").onclick = async () => {
+  $("reload").textContent = "Перезагрузка…";
+  try{ await fetch("/api/call?method=post&path=%2Fapi%2Flocation%2Freload", {method:"POST"}); }
+  catch(e){ alert(e.message); }
+  $("reload").textContent = "Reload конфига";
+  setTimeout(load, 1500);
+};
+loadAll();
+</script>
+</body>
+</html>

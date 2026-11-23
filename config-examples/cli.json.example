@@ -1,0 +1,12 @@
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+
+  // Встроенные алерты отключаем: уведомлениями занимается opencode-notifier
+  "attention": {
+    "notifications": false,
+    "sound": false
+  },
+
+  // Порядок важен: сначала включаем все, потом отключаем встроенный плагин уведомлений
+  "plugins": ["*", "-opencode.notifications"]
+}

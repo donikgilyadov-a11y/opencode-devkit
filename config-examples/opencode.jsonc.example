@@ -1,0 +1,49 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  "experimental": { "todo": true },
+  "formatter": true,
+  "update": "notify",
+
+  // Пути используют <HOME> как подстановку: установщик заменяет его на домашнюю папку.
+  "instructions": [
+    "<HOME>/Desktop/opencode-boost/INSTRUCTIONS.md"
+  ],
+  "skills": [
+    "<HOME>/Desktop/opencode-boost/skills"
+  ],
+  "references": {
+    "brain": {
+      "path": "<HOME>/Desktop/opencode-boost/brain",
+      "description": "Второй мозг: факты, решения, дневники, тематические заметки"
+    }
+  },
+
+  "permissions": [
+    { "action": "shell", "resource": "git push *", "effect": "ask" },
+    { "action": "skill", "resource": "*", "effect": "allow" }
+  ],
+
+  // Пакеты ставятся отдельно: opencode plugin add <package>
+  "plugins": [
+    "@tarquinen/opencode-dcp@latest",
+    "@mohak34/opencode-notifier@latest",
+    "opencode-auto-resume@latest",
+    "cc-safety-net@latest",
+    "envsitter-guard@latest",
+    "@slkiser/opencode-quota@latest",
+    "opencode-v2-ponytail-scoped@latest"
+  ],
+
+  "mcp": {
+    "servers": {
+      "obsidian": {
+        "type": "remote",
+        "url": "http://127.0.0.1:27125/mcp/",
+        "oauth": false,
+        "protocol": "auto",
+        "codemode": true
+      }
+    }
+  }
+}
