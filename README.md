@@ -8,12 +8,12 @@
 
 | Папка | Что внутри |
 | --- | --- |
-| `plugins/` | 5 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools` |
-| `skills/` | 9 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian` |
-| `commands/` | 12 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, …) |
+| `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
+| `skills/` | 10 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit` |
+| `commands/` | 13 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
-| `scripts/` | CLI второго мозга, графов, аудита, самопроверки, дым-теста, Obsidian-прокси и watchdog |
+| `scripts/` | CLI второго мозга, графов, аудита репозиториев и сессий, самопроверки, дым-теста, Obsidian-прокси и watchdog |
 | `config-examples/` | Примеры `opencode.jsonc`, `cli.json`, настроек уведомлений, DCP, ponytail и глобальных инструкций |
 | `brain-template/` | Пустая структура второго мозга |
 
@@ -52,7 +52,7 @@ opencode plugin add opencode-v2-ponytail-scoped@latest
 ## Проверка после установки
 
 ```powershell
-& 'C:\Program Files\nodejs\npm.cmd' test        # 18 юнит-тестов
+& 'C:\Program Files\nodejs\npm.cmd' test        # 23 юнит-теста
 node scripts\smoke-admin.js                     # 8 проверок админки (нужен запущенный сервер)
 node scripts\oc-check.js --json                 # самопроверка сборки (20 проверок)
 ```
@@ -68,6 +68,20 @@ node scripts\oc-doctor.js --apply --json --service  # ещё и перезапу
 ```
 
 В OpenCode для этого есть команды `/oc-doctor` (план, только чтение) и `/oc-doctor-fix` (применение). Ручные пункты (битые ссылки вики, посторонние символы, выключенный Obsidian) не трогаются автоматически — врач только показывает их. Бэкапы складываются в `brain/reports/doctor-backups/<время>/`.
+
+## Аудит сессий
+
+`scripts/session-audit.js` и плагин `session-audit-tools` читают `opencode.log` и находят повторяющиеся ошибки,
+всплески (5+ одинаковых событий за 2 минуты) и перезапуски CLI. Отчёт с фиксами и тестами сохраняется в
+`brain/reports/session-audit-YYYY-MM-DD.md`; токены и домашний путь в отчёте заменяются заглушками.
+
+```powershell
+node scripts\session-audit.js --hours 168            # сводка
+node scripts\session-audit.js --all --save --json    # полный отчёт в мозг
+```
+
+В OpenCode: `/session-audit`, инструменты `sessionaudit.scan`, `sessionaudit.patterns`, `sessionaudit.report`.
+Плагин ничего не меняет в логах и не применяет фиксы автоматически.
 
 ## Проверка навыков (SkillEvaluator)
 
