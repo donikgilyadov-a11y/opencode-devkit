@@ -48,6 +48,8 @@ cd opencode-devkit
 
 Ещё два навыка — `performance-optimization` и `api-and-interface-design` — закрывают долги по очередям и контрактам API из отчётов аудита. Они прошли SkillEvaluator (2/2, A 90.2), источник MIT и атрибуция — в `skills/PERF-API-ATTRIBUTION.md`.
 
+Четыре навыка для дизайна и вёрстки — `frontend-ui-engineering`, `accessibility-engineering`, `web-design-guidelines` и `vercel-composition-patterns` — покрывают WCAG, адаптивность, справочник правил Vercel и композицию React. Все прошли SkillEvaluator 4/4; источники MIT, атрибуция — в `skills/UI-DESIGN-ATTRIBUTION.md`. Внешние `npx`-утилиты из accessibility-навыка не запускались и не устанавливались.
+
 Следующая пара — `doubt-driven-development` (адверсариальная проверка выводов в свежем контексте) и `deprecation-and-migration` (expand/contract миграции и удаление мёртвого кода). Оба прошли SkillEvaluator (2/2, A 90.2), MIT-источник зафиксирован, атрибуция — в `skills/DOUBT-MIGRATION-ATTRIBUTION.md`.
 
 ## После установки
