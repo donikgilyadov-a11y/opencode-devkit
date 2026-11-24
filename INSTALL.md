@@ -54,6 +54,8 @@ cd opencode-devkit
 
 Ещё семь навыков закрывают тестирование LLM и флейковых тестов (`ai-agent-evaluation`, `flaky-test-management`, `property-based-testing`), выкат и инциденты (`shipping-and-launch`, `incident-response`), онбординг в код (`codebase-onboarding-check`) и техническую прозу (`tech-writing`). Все семь прошли SkillEvaluator 7/7; зафиксированные источники, лицензии и адаптации — в `skills/NEXTWAVE-ATTRIBUTION.md`.
 
+Пять локальных агентных навыков дополняют оркестрацию без внешних зависимостей: `agent-loop-contracts`, `tool-and-mcp-authoring`, `agent-eval-harness`, `context-window-budgeting` и `durable-agent-workflows`. Они написаны на этом компьютере по итогам разбора советов из папки `Новая папка`, прошли SkillEvaluator 5/5 (A 92.8–94.5), не требуют плагинов и не меняют конфиг сервиса. Заметки — `skills/AGENTOPS-NOTES.md`.
+
 ## После установки
 
 ```powershell
