@@ -76,33 +76,33 @@ function resolveFile(root, index, ref) {
 // Для-check с window исправление ищется рядом с каждым совпадением open.
 const CHECKS = [
   // P0 — периметр и безопасность
-  { id: "P0-1", severity: "P0", title: "Permission middleware fail-open без agentId", files: ["permission-middleware.ts"], open: ["if\\s*\\(\\s*!\\s*ctx\\.agentId\\s*\\)\\s*return\\s*\\{\\s*kind:\\s*['\"]allow['\"]"], fixed: ["!ctx\\.agentId[^\\n]{0,120}deny", "default-deny", "system.*authz"], window: 3 },
-  { id: "P0-2", severity: "P0", title: "Code-runner: произвольный node/npm/npx + полный env", files: ["server/code-runner-sidecar.mjs"], open: ["['\"]npx['\"]", "env:\\s*\\{\\s*\\.\\.\\.process\\.env"], fixed: ["env:\\s*\\{\\s*(PATH|CI)[^\\n]*\\}", "ALLOWED_SCRIPTS", "allowedScripts"], window: 6 },
-  { id: "P0-3", severity: "P0", title: "Python browser-use sidecar: SSRF/loopback/RFC1918", files: ["docker/browser-use-sidecar/server.py"], open: ["loopback/RFC1918 разрешены", "dev-имена разрешены"], fixed: ["is_private", "is_loopback", "is_link_local", "dns\\.resolve", "redirect"], window: 8 },
-  { id: "P0-4", severity: "P0", title: "HTTP REST gateway без tenant-scope", files: ["server/sync-server.mjs"], open: ["approvalDecideRoute\\s*=\\s*pathname\\.match", "companies/[^\\n]*export"], fixed: ["tenantScope", "requireCompany", "hasCompanyAccess", "assertCompany"], window: 8 },
+  { id: "P0-1", severity: "P0", title: "Permission middleware fail-open без agentId", files: ["permission-middleware.ts"], open: ["if\\s*\\(\\s*!\\s*ctx\\.agentId\\s*\\)\\s*return\\s*\\{\\s*kind:\\s*['\"]allow['\"]", "if\\s*\\(\\s*!\\s*ctx\\.agentId\\s*\\)\\s*\\{?\\s*return"], fixed: ["!ctx\\.agentId\\s*&&\\s*!authzAllowed", "authzAllowed[^\\n]{0,80}effect\\s*===\\s*['\"]allow", "default-deny"], window: 6 },
+  { id: "P0-2", severity: "P0", title: "Code-runner: произвольный node/npm/npx + полный env", files: ["server/code-runner-sidecar.mjs"], open: ["['\"]npx['\"]", "env:\\s*\\{\\s*\\.\\.\\.process\\.env", "['\"]npm['\"]"], fixed: ["process\\.execPath", "CHILD_ENV", "ENV_ALLOWLIST", "tokenRequired"], window: 10 },
+  { id: "P0-3", severity: "P0", title: "Python browser-use sidecar: SSRF/loopback/RFC1918", files: ["docker/browser-use-sidecar/server.py"], open: ["loopback/RFC1918 разрешены", "dev-имена разрешены"], fixed: ["allowedDomains", "allowed_domains", "is_private", "is_loopback", "is_link_local"], window: 10 },
+  { id: "P0-4", severity: "P0", title: "HTTP REST gateway без tenant-scope", files: ["server/sync-server.mjs"], open: ["approvalDecideRoute\\s*=\\s*pathname\\.match", "companies/[^\\n]*export"], fixed: ["canAccessCompany", "tenantScope", "requireCompany", "hasCompanyAccess", "assertCompany"], window: 24 },
   { id: "P0-5", severity: "P0", title: "Chat cross-tab lock fail-open", files: ["chat-send-message.ts"], open: ["!lockResult\\.lock", "lock.*fail"], fixed: ["failClosed", "lockRequired", "throw new Error\\(['\"]Chat lock"], window: 5 },
   { id: "P0-6", severity: "P0", title: "Нет fencing token в distributed lock", files: ["cross-tab-lock-service.ts"], open: ["ownerId"], fixed: ["fencingToken", "fencing_token"], window: 12 },
-  { id: "P0-7", severity: "P0", title: "Governance/agent/crew мутации без authz", files: ["governance-service.ts", "agent-service.ts", "crew-service.ts"], open: ["grantCapability\\s*\\(", "assignRole\\s*\\(", "spawn\\s*\\("], fixed: ["callerId", "assertAuthz", "authorizationService\\.evaluate"], window: 10 },
-  { id: "P0-8", severity: "P0", title: "AUTOPILOT без admin-гейта", files: ["agems-approval-service.ts"], open: ["AUTOPILOT"], fixed: ["requireAdmin\\s*\\(", "assertAdmin\\s*\\(", "hasRole\\([^\\n]*admin"], window: 10 },
-  { id: "P0-9", severity: "P0", title: "Токены/секреты в localStorage", files: ["browser-use-service.ts", "sidecar-computer-executor.ts", "config-registry.ts"], open: ["localStorage[\\s\\S]{0,80}(token|secret)", "(token|secret)[\\s\\S]{0,80}localStorage"], fixed: ["HttpOnly", "sessionStorage", "SecureStore"], window: 6 },
+  { id: "P0-7", severity: "P0", title: "Governance/agent/crew мутации без authz", files: ["trust/governance-service.ts", "agent-service.ts", "crew/crew-service.ts"], open: ["grantCapability\\s*\\(", "assignRole\\s*\\(", "spawn\\s*\\("], fixed: ["assertCanManage", "assertAuthz", "authorizationService\\.evaluate", "callerId"], window: 10 },
+  { id: "P0-8", severity: "P0", title: "AUTOPILOT без admin-гейта", files: ["agems-approval-service.ts"], open: ["AUTOPILOT"], fixed: ["assertPresetAllowed", "requireAdmin\\s*\\(", "assertAdmin\\s*\\(", "hasRole\\([^\\n]*admin"], window: 10 },
+  { id: "P0-9", severity: "P0", title: "Токены/секреты в localStorage", files: ["browser-use-service.ts", "sidecar-computer-executor.ts", "config-registry.ts", "gatewaySecretStorage.ts"], open: ["localStorage[\\s\\S]{0,80}(token|secret)", "(token|secret)[\\s\\S]{0,80}localStorage"], fixed: ["sessionStorage", "HttpOnly", "SecureStore"], window: 8 },
 
   // P1 — надёжность и целостность
-  { id: "P1-1", severity: "P1", title: "Clean-shutdown флаг не пишется в destroy()", files: ["database-service.ts"], open: ["CLEAN_SHUTDOWN_KEY|ai_os_clean_shutdown", "destroy\\s*\\("], fixed: ["setItem\\([^\\n]*(CLEAN_SHUTDOWN_KEY|ai_os_clean_shutdown)"], window: 18 },
-  { id: "P1-2", severity: "P1", title: "Два DLQ не связаны /EventBus → IDeadLetterQueue/", files: ["event-bus.ts", "dead-letter-queue-service.ts"], open: ["pushDeadLetter", "drainDeadLetterQueue"], fixed: ["IDeadLetterQueue\\.push", "deadLetterService\\.push", "deadLetterQueueService\\.push"], window: 12 },
+  { id: "P1-1", severity: "P1", title: "Clean-shutdown флаг не пишется в destroy()", files: ["database-service.ts"], open: ["destroy\\s*\\([^)]*\\)\\s*\\{(?![\\s\\S]{0,600}setItem\\([^\\n]*(CLEAN_SHUTDOWN_KEY|ai_os_clean_shutdown))"], fixed: ["setItem\\([^\\n]*(CLEAN_SHUTDOWN_KEY|ai_os_clean_shutdown)"], window: 20 },
+  { id: "P1-2", severity: "P1", title: "Два DLQ не связаны /EventBus → IDeadLetterQueue/", files: ["event-bus.ts", "dead-letter-queue-service.ts"], open: ["pushDeadLetter", "drainDeadLetterQueue"], fixed: ["deadLetterSink", "setDeadLetterSink", "IDeadLetterQueue\\.push", "deadLetterService\\.push", "deadLetterQueueService\\.push"], window: 16 },
   { id: "P1-3", severity: "P1", title: "WAL EventRecorder без проверки checksum", files: ["event-recorder.ts"], open: ["event-recorder:wal", "this\\.events\\.push\\(ev\\)"], fixed: ["verifyChecksum", "boundedChecksum"], window: 18 },
-  { id: "P1-4", severity: "P1", title: "EventBus backpressure эмитит событие реентрантно", files: ["event-bus.ts"], open: ["this\\.emit\\(EVENTS\\.EVENTBUS_BACKPRESSURE"], fixed: ["_backpressureEmitting", "noEmit", "backpressureGuard"], window: 8 },
-  { id: "P1-5", severity: "P1", title: "CacheService pendingSet не очищается /perpetual stale/", files: ["cache-service.ts"], open: ["pendingSet\\.add", "wasExplicitlySet"], fixed: ["pendingSet\\.delete[^\\n]{0,200}(invalidate|evict|set)"], window: 12 },
-  { id: "P1-6", severity: "P1", title: "BatchProcessor: parallel runJob + timeout без abort", files: ["batch-processor-service.ts"], open: ["currentAbort", "Promise\\.race"], fixed: ["Map<[^>]*AbortController", "abortController\\.abort", "runningJob"], window: 10 },
-  { id: "P1-7", severity: "P1", title: "_initialized = true до await в init()", files: ["key-service.ts", "config-service.ts", "settings-service.ts"], open: ["_initialized\\s*=\\s*true"], fixed: ["initPromise", "_initPromise", "_initialized\\s*=\\s*true[^\\n]{0,120}await"], window: 12 },
-  { id: "P1-8", severity: "P1", title: "Zod-хуки покрывают только ~23 из 131 таблицы", files: ["schema-hooks.ts", "dexie-schema.ts"], open: ["schemaHooks", "z\\.object\\(\\{"], fixed: ["ALL_TABLES", "applyToAllTables", "registerAllHooks", "ZOD_HOOKS_FOR_ALL_TABLES"], window: 40 },
-  { id: "P1-9", severity: "P1", title: "Hard-stop бюджета in-memory и сбрасывается", files: ["cost-manager.ts"], open: ["NO server persistence", "records\\s*=\\s*\\[\\]"], fixed: ["saveCostRecords", "costHistory", "persistRecords"], window: 14 },
+  { id: "P1-4", severity: "P1", title: "EventBus backpressure эмитит событие реентрантно", files: ["event-bus.ts"], open: ["this\\.emit\\(EVENTS\\.EVENTBUS_BACKPRESSURE"], fixed: ["_deferQueue", "queueMicrotask", "hotEmitDepth", "_backpressureEmitting"], window: 32 },
+  { id: "P1-5", severity: "P1", title: "CacheService pendingSet не очищается /perpetual stale/", files: ["cache-service.ts"], open: ["wasExplicitlySet"], fixed: ["pendingSet\\.delete"], window: 12 },
+  { id: "P1-6", severity: "P1", title: "BatchProcessor: parallel runJob + timeout без abort", files: ["batch-processor-service.ts"], open: ["currentAbort", "Promise\\.race"], fixed: ["AbortController", "signal", "abortController\\.abort", "runningJob"], window: 10 },
+  { id: "P1-7", severity: "P1", title: "_initialized = true до await в init()", files: ["key-management/key-service.ts", "dead-letter-queue-service.ts", "config-service.ts", "settings-service.ts"], open: ["_initialized\\s*=\\s*true"], fixed: ["initPromise", "_initPromise", "_initialized\\s*=\\s*true[^\\n]{0,120}await"], window: 12 },
+  { id: "P1-8", severity: "P1", title: "Zod-хуки покрывают только ~23 из 131 таблицы", files: ["schema-hooks.ts", "dexie-schema.ts"], open: ["\\.hook\\(['\"]updating"], fixed: ["ALL_TABLES", "applyToAllTables", "registerAllHooks", "ZOD_HOOKS_FOR_ALL_TABLES"], window: 40 },
+  { id: "P1-9", severity: "P1", title: "Hard-stop бюджета in-memory и сбрасывается", files: ["llm/decorators/cost-manager.ts"], open: ["NO server persistence", "records\\s*=\\s*\\[\\]"], fixed: ["saveCostRecords", "costHistory", "persistRecords", "platformBudgets"], window: 14 },
   { id: "P1-10", severity: "P1", title: "SnapshotService.startReplay портит живое состояние", files: ["snapshot-service.ts"], open: ["startReplay\\s*\\(", "kernel\\.loadState"], fixed: ["saveStateBeforeReplay", "try\\s*\\{[\\s\\S]{0,400}finally", "restoreLiveState"], window: 24 },
   { id: "P1-11", severity: "P1", title: "Per-tab rate-limit бакеты", files: ["rate-limit-decorator.ts"], open: ["#global", "#perProvider"], fixed: ["getKvCas", "sharedBucket", "crossTabBucket"], window: 14 },
   { id: "P1-12", severity: "P1", title: "Groq обходит LLM-стек через SDK", files: ["groq-adapter.ts"], open: ["groq-sdk", "dangerouslyAllowBrowser"], fixed: ["LLMHttpClient", "RateLimitDecorator", "CircuitBreaker"], window: 20 },
 
   // P2 — качество/документация/периферия
   { id: "P2-1", severity: "P2", title: "SSE без Last-Event-ID/resume", files: ["sync-server.mjs"], open: ["text/event-stream"], fixed: ["Last-Event-ID", "last-event-id", "event:\\s*"], window: 20 },
-  { id: "P2-2", severity: "P2", title: "clearAllData чистит только 16/131 таблиц", files: ["key-service.ts"], open: ["clearAllData"], fixed: ["db\\.tables\\.forEach", "for\\s*\\(const table of db\\.tables"], window: 16 },
+  { id: "P2-2", severity: "P2", title: "clearAllData чистит только 16/131 таблиц", files: ["key-management/key-service.ts", "key-service.ts"], open: ["clearAllData"], fixed: ["db\\.tables\\.forEach", "for\\s*\\(const table of db\\.tables"], window: 16 },
   { id: "P2-3", severity: "P2", title: "Unhandled promise в memory worker", files: ["memory.worker.ts"], open: ["void\\s+oramaRemove", "onunhandledrejection"], fixed: ["catch\\(LOGGER", "postMessage\\([^\\n]*error"], window: 10 },
 ];
 
@@ -219,7 +219,7 @@ function renderReport(res) {
     `- Git: ${[res.git.branch, res.git.lastCommit].filter(Boolean).join(" · ") || "—"}`,
     `- Проверок: ${s.total} · исправлено: ${s.fixed} · открыто: ${s.open} · смешано: ${s.mixed} · неясно: ${s.uncertain + s.missing + s.manual}`,
     `- Закрыто относительно базы: ${res.diff.closed.length} · регрессов: ${res.diff.regressed.length} · осталось не закрытых: ${res.diff.remaining.length}`,
-    res.baselineCreated ? `- База создана заново: \`${res.baseline}\`` : `- База: \`${res.baseline}\``,
+    res.baselineCreated ? `- База создана заново: \`${res.baselinePath}\`` : `- База: \`${res.baselinePath}\``,
     "",
     "## Динамика относительно базы",
     "",
@@ -304,7 +304,7 @@ async function main() {
   }
 
   const res = {
-    date: today(), name, root, git, results, summary, baseline: bp, baselineCreated,
+    date: today(), name, root, git, results, summary, baseline, baselinePath: bp, baselineCreated,
     diff: diffBaseline(results, baseline),
   };
   if (opts.save && !opts.json) {
