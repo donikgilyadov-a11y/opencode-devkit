@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 14 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite` |
+| `skills/` | 18 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer` |
 | `commands/` | 13 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -110,6 +110,17 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 - `hffmnnj.deep-research@latest` — пакетный плагин V2 (MIT) с постоянной библиотекой исследований, инструментами `tools.research.*` (только Code Mode) и тремя подагентами `deep-research/researcher|verifier|librarian`. Библиотека хранится в `~/.local/share/opencode-deep-research/library/`. Плагин сам регистрирует навык `deep-research`, поэтому файл из его репозитория в `skills/` не копировался.
 
 Оба кандидата прошли SkillEvaluator: `harness-check` — 2/2 загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 2/2 прошли (оценки A 92.0 и B 86.0). Источники и зафиксированные коммиты — в `skills/DEEP-RESEARCH-ATTRIBUTION.md`. Плагин добавляется в конфиг через `opencode plugin add hffmnnj.deep-research@latest`; обновлённый пример есть в `config-examples/opencode.jsonc.example`.
+
+## Анализ чужих репозиториев
+
+Четыре внешних навыка для чтения и понимания кодовой базы (без её изменения):
+
+- `repository-analysis` — быстрый отчёт «первого взгляда»: обзор, архитектура, структура, ключевые компоненты, тесты и риски.
+- `exploring-code` — тщательный онбординг через субагента `explore`: документация → структура → тесты → исходники → интеграции. Адаптирован под наш харнесс (`subagent`/`agent: explore`, отчёт в `brain/reports/` только по просьбе).
+- `analyzing-projects` — пятислойный разбор: поверхностный скан, зависимости, архитектура, трассировка потоков, качество.
+- `code-explorer` — детальное объяснение конкретной фичи: пути выполнения, слои, абстракции, границы доверенных данных и цитаты `file:line`.
+
+До установки все четыре прошли SkillEvaluator: `harness-check` — 4/4 загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 4/4 прошли (оценки 88.5–90.8). Источники, зафиксированные коммиты, лицензии и адаптации — в `skills/REPO-ANALYSIS-ATTRIBUTION.md`. Навыки дополняют `repo-audit` и не изменяют проверяемый репозиторий.
 
 ## CI/CD и релизы
 

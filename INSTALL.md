@@ -36,6 +36,8 @@ cd opencode-devkit
 
 Для разбора логов сессий используйте `/session-audit` (или `node scripts\session-audit.js --hours 168`): он покажет повторяющиеся ошибки, всплески и перезапуски CLI, а отчёт с рекомендациями сохранит через `--save` в `brain/reports/`.
 
+Для чтения чужой кодовой базы доступны навыки `repository-analysis`, `exploring-code`, `analyzing-projects` и `code-explorer` — они только анализируют и не меняют репозиторий. Источники и атрибуция — в `skills/REPO-ANALYSIS-ATTRIBUTION.md`.
+
 ## После установки
 
 ```powershell
