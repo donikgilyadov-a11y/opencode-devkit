@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 39 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit`, `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming`, `caveman`, `verification-before-completion`, `dispatching-parallel-agents`, `receiving-code-review`, `reviewing-security`, `memory-leaks`, `backpressure`, `race-conditions`, `error-handling`, `observability-instrumentation`, `performance-optimization`, `api-and-interface-design` |
+| `skills/` | 41 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit`, `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming`, `caveman`, `verification-before-completion`, `dispatching-parallel-agents`, `receiving-code-review`, `reviewing-security`, `memory-leaks`, `backpressure`, `race-conditions`, `error-handling`, `observability-instrumentation`, `performance-optimization`, `api-and-interface-design`, `doubt-driven-development`, `deprecation-and-migration` |
 | `commands/` | 14 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, `/reaudit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -154,6 +154,10 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 ## Производительность и API
 
 Два следующих навыка из того же зафиксированного MIT-источника `addyosmani/agent-skills` (`e997ac5b9a74eab332d5e9793bb38a38c8cfdd74`): `performance-optimization` (измерения до оптимизации, N+1, пакетные запросы, кэш-ключи, O(n²)) и `api-and-interface-design` (контракты, валидация на границе, идемпотентность, TOCTOU, единообразные ошибки). Оба выбраны под конкретные долги аудита ai-os-new и не пересекаются с уже установленными навыками. SkillEvaluator: `harness-check` 2/2 load, `validate --tiers 1 --checks schema,quality --min-score 70` 2/2 pass (A 90.2 / A 90.2); в `api-and-interface-design` заменён price-like токен `$50` на `USD 50`. Атрибуция — `skills/PERF-API-ATTRIBUTION.md`. Пропущены `accessibility-engineering`, `constraint-driven-development`, `code-simplification` и `documentation-and-adrs`: требуют дополнительных зависимостей или дублируют установленные навыки.
+
+## Сомнение и миграции
+
+Следующая пара из того же зафиксированного MIT-источника `addyosmani/agent-skills` (`e997ac5b9a74eab332d5e9793bb38a38c8cfdd74`): `doubt-driven-development` (адверсариальная проверка неочевидных выводов в свежем контексте перед передачей дальше) и `deprecation-and-migration` (expand/contract миграции схем, устаревшие API и мёртвый код). Оба выбраны под долги ai-os-new: расхождения в отчётах и миграции v5→v45. SkillEvaluator: `harness-check` 2/2 load, `validate --tiers 1 --checks schema,quality --min-score 70` 2/2 pass (A 90.2 / A 90.2). Атрибуция — `skills/DOUBT-MIGRATION-ATTRIBUTION.md`. Пропущены `source-driven-development` и прочие навыки с пересечениями или лишними зависимостями.
 
 ## Повторный аудит
 

@@ -48,6 +48,8 @@ cd opencode-devkit
 
 Ещё два навыка — `performance-optimization` и `api-and-interface-design` — закрывают долги по очередям и контрактам API из отчётов аудита. Они прошли SkillEvaluator (2/2, A 90.2), источник MIT и атрибуция — в `skills/PERF-API-ATTRIBUTION.md`.
 
+Следующая пара — `doubt-driven-development` (адверсариальная проверка выводов в свежем контексте) и `deprecation-and-migration` (expand/contract миграции и удаление мёртвого кода). Оба прошли SkillEvaluator (2/2, A 90.2), MIT-источник зафиксирован, атрибуция — в `skills/DOUBT-MIGRATION-ATTRIBUTION.md`.
+
 ## После установки
 
 ```powershell
