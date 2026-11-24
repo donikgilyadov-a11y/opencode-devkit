@@ -52,6 +52,8 @@ cd opencode-devkit
 
 Следующая пара — `doubt-driven-development` (адверсариальная проверка выводов в свежем контексте) и `deprecation-and-migration` (expand/contract миграции и удаление мёртвого кода). Оба прошли SkillEvaluator (2/2, A 90.2), MIT-источник зафиксирован, атрибуция — в `skills/DOUBT-MIGRATION-ATTRIBUTION.md`.
 
+Ещё семь навыков закрывают тестирование LLM и флейковых тестов (`ai-agent-evaluation`, `flaky-test-management`, `property-based-testing`), выкат и инциденты (`shipping-and-launch`, `incident-response`), онбординг в код (`codebase-onboarding-check`) и техническую прозу (`tech-writing`). Все семь прошли SkillEvaluator 7/7; зафиксированные источники, лицензии и адаптации — в `skills/NEXTWAVE-ATTRIBUTION.md`.
+
 ## После установки
 
 ```powershell
