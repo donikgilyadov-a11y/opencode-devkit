@@ -80,6 +80,7 @@ Start-Process -FilePath 'C:\Program Files\nodejs\node.exe' `
 node scripts\oc-check.js --json
 node scripts\oc-doctor.js --json          # план авто-врача, ничего не меняет
 node scripts\oc-doctor.js --apply --json  # применить фиксы с бэкапами
+node scripts\reaudit.js "<папка с проектом>" --name ai-os-new  # read-only сравнение с базой
 ```
 
 В GitHub Actions те же проверки запускают `.github/workflows/ci.yml` (`npm test` + `npm run smoke:ci`) и `.github/workflows/skills.yml`. Релиз создаётся вручную через `.github/workflows/release.yml`: он обновит `VERSION`/`CHANGELOG.md`, поставит тег `vX.Y.Z` и опубликует архив.

@@ -9,8 +9,8 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 21 навык: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator` |
-| `commands/` | 13 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, …) |
+| `skills/` | 22 навыка: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit` |
+| `commands/` | 14 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, `/reaudit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
 | `scripts/` | CLI второго мозга, графов, аудита репозиториев и сессий, самопроверки, дым-теста, Obsidian-прокси и watchdog |
@@ -52,7 +52,7 @@ opencode plugin add opencode-v2-ponytail-scoped@latest
 ## Проверка после установки
 
 ```powershell
-& 'C:\Program Files\nodejs\npm.cmd' test        # 23 юнит-теста
+& 'C:\Program Files\nodejs\npm.cmd' test        # 29 юнит-тестов
 & 'C:\Program Files\nodejs\npm.cmd' run smoke      # 8 проверок админки (нужен запущенный сервер)
 & 'C:\Program Files\nodejs\npm.cmd' run smoke:ci   # 6 проверок + 2 SKIP, сервер поднимается сам
 node scripts\oc-check.js --json                 # самопроверка сборки (20 проверок)
@@ -132,6 +132,18 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 оценки B 89.0. Источники MIT зафиксированы по коммитам, атрибуция — в
 `skills/META-ATTRIBUTION.md`. В `opencode-skill-creation` пути адаптированы под
 `~/.config/opencode/skills` и Windows (`New-Item -ItemType SymbolicLink` вместо `ln -s`).
+
+## Повторный аудит
+
+`scripts/reaudit.js`, навык `reaudit`, команда `/reaudit` и npm-скрипт `reaudit` нужны, чтобы
+после исправлений на другом ПК прогнать те же 24 проверки и сравнить с базовой линией:
+
+```powershell
+node scripts\reaudit.js "<папка с проектом>" --name ai-os-new
+```
+
+Скрипт только читает файлы; отчёт и diff сохраняются в `brain/reports/`. Подробности — в
+вики `wiki/reaudit.md`.
 
 ## CI/CD и релизы
 
