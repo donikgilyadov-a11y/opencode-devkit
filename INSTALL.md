@@ -44,6 +44,8 @@ cd opencode-devkit
 
 Три навыка процесса — `verification-before-completion`, `dispatching-parallel-agents` и `receiving-code-review` — дополняют цикл проверкой доказательств перед завершением, аккуратным распараллеливанием и технической оценкой ревью. Все три прошли SkillEvaluator (3/3), происхождение и лицензия — в `skills/NEXT3-ATTRIBUTION.md`.
 
+Шесть навыков укрепления кода — `reviewing-security`, `memory-leaks`, `backpressure`, `race-conditions`, `error-handling` и `observability-instrumentation` — помогают проверять безопасность, утечки, очереди, гонки, ошибки и наблюдаемость. Все прошли SkillEvaluator (6/6), источники и лицензии зафиксированы в `skills/HARDENING-ATTRIBUTION.md`.
+
 ## После установки
 
 ```powershell

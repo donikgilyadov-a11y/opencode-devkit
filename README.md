@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 31 навык: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit`, `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming`, `caveman`, `verification-before-completion`, `dispatching-parallel-agents`, `receiving-code-review` |
+| `skills/` | 37 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit`, `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming`, `caveman`, `verification-before-completion`, `dispatching-parallel-agents`, `receiving-code-review`, `reviewing-security`, `memory-leaks`, `backpressure`, `race-conditions`, `error-handling`, `observability-instrumentation` |
 | `commands/` | 14 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, `/reaudit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -146,6 +146,10 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 ## Три навыка процесса
 
 Следующие три навыка из `obra/superpowers` (MIT, коммит `22f0b463e7a5e579904dd6211a520321035526f7`) добирают недостающие этапы рабочего цикла: `verification-before-completion` (доказательства до любого «готово»), `dispatching-parallel-agents` (изолированные задачи для параллельных субагентов) и `receiving-code-review` (техническая оценка ревью вместо слепого согласия). SkillEvaluator: `harness-check` 3/3, `validate` 3/3 (A 91.5 / B 87.8 / A 90.2). Атрибуция — `skills/NEXT3-ATTRIBUTION.md`. Остальные навыки superpowers не ставились: они дублируют уже установленные или зависят от sibling-навыков.
+
+## Навыки укрепления кода
+
+Шесть навыков подобраны под долги ai-os-new из отчётов аудита: `reviewing-security` (безопасность с проверкой пути от атакующего к последствию), `memory-leaks`, `backpressure`, `race-conditions`, `error-handling` и `observability-instrumentation`. Источники зафиксированы по коммитам: osmontero/opencode-skills `3478280631435fcb9e2d85c5f053f8e8e64364b8` (MIT), triggerdotdev/staff-engineering-skills `597da099e4b7d07f53946cc393ca24ad9274d925` (Apache-2.0), DevelopersGlobal/ai-agent-skills `b430fd194facf6d3a35cbc49c98410f6e0956d93` (MIT), addyosmani/agent-skills `e997ac5b9a74eab332d5e9793bb38a38c8cfdd74` (MIT). SkillEvaluator: `harness-check` 6/6, `validate --tiers 1 --checks schema,quality --min-score 70` 6/6 (оценки 85.2–90.2); в `error-handling` добавлен верхний заголовок, имена папок приведены к kebab-case. Атрибуция — `skills/HARDENING-ATTRIBUTION.md`. Навыки security-review, threat-model, secret-hygiene, zod-schema и каталоги с внешними рантаймами не ставились: дублируют установленные или требуют неподходящих зависимостей.
 
 ## Повторный аудит
 
