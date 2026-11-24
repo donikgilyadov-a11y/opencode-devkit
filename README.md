@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 28 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit`, `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming`, `caveman` |
+| `skills/` | 31 навык: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit`, `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming`, `caveman`, `verification-before-completion`, `dispatching-parallel-agents`, `receiving-code-review` |
 | `commands/` | 14 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, `/reaudit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -142,6 +142,10 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 `code-reviewer` добавлен заголовок верхнего уровня, а в `git-commits-prs` убран литерал
 `$ARGUMENTS`. Источники, зафиксированные коммиты и лицензии (MIT и Apache-2.0) — в
 `skills/STARTER6-ATTRIBUTION.md`.
+
+## Три навыка процесса
+
+Следующие три навыка из `obra/superpowers` (MIT, коммит `22f0b463e7a5e579904dd6211a520321035526f7`) добирают недостающие этапы рабочего цикла: `verification-before-completion` (доказательства до любого «готово»), `dispatching-parallel-agents` (изолированные задачи для параллельных субагентов) и `receiving-code-review` (техническая оценка ревью вместо слепого согласия). SkillEvaluator: `harness-check` 3/3, `validate` 3/3 (A 91.5 / B 87.8 / A 90.2). Атрибуция — `skills/NEXT3-ATTRIBUTION.md`. Остальные навыки superpowers не ставились: они дублируют уже установленные или зависят от sibling-навыков.
 
 ## Повторный аудит
 

@@ -42,6 +42,8 @@ cd opencode-devkit
 
 Стартовый набор `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming` и `caveman` тоже проверен SkillEvaluator (6/6). Он закрывает базовый цикл разработки: отладка, тесты перед кодом, коммиты/PR, ревью, мозговой штурм и краткий стиль ответа. Атрибуция — в `skills/STARTER6-ATTRIBUTION.md`.
 
+Три навыка процесса — `verification-before-completion`, `dispatching-parallel-agents` и `receiving-code-review` — дополняют цикл проверкой доказательств перед завершением, аккуратным распараллеливанием и технической оценкой ревью. Все три прошли SkillEvaluator (3/3), происхождение и лицензия — в `skills/NEXT3-ATTRIBUTION.md`.
+
 ## После установки
 
 ```powershell
