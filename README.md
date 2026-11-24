@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 22 навыка: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit` |
+| `skills/` | 28 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator`, `reaudit`, `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming`, `caveman` |
 | `commands/` | 14 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, `/reaudit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -132,6 +132,16 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 оценки B 89.0. Источники MIT зафиксированы по коммитам, атрибуция — в
 `skills/META-ATTRIBUTION.md`. В `opencode-skill-creation` пути адаптированы под
 `~/.config/opencode/skills` и Windows (`New-Item -ItemType SymbolicLink` вместо `ln -s`).
+
+## Стартовый набор навыков
+
+Шесть внешних навыков для ежедневной разработки прошли тот же гейт SkillEvaluator:
+`systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`,
+`brainstorming`, `caveman`. `harness-check` — 6/6 загружаются, `validate --tiers 1
+--checks schema,quality --min-score 70` — 6/6 прошли (оценки 86.2–92.8). В
+`code-reviewer` добавлен заголовок верхнего уровня, а в `git-commits-prs` убран литерал
+`$ARGUMENTS`. Источники, зафиксированные коммиты и лицензии (MIT и Apache-2.0) — в
+`skills/STARTER6-ATTRIBUTION.md`.
 
 ## Повторный аудит
 

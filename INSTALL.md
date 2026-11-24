@@ -40,6 +40,8 @@ cd opencode-devkit
 
 Для работы с самими навыками есть `opencode-skill-creation`, `skill-doc-authoring` и `skill-creator`: создание по V2-конвенциям, короткая документация с хорошим триггером и управление установленными навыками. Все три прошли SkillEvaluator; происхождение и лицензии — в `skills/META-ATTRIBUTION.md`.
 
+Стартовый набор `systematic-debugging`, `test-driven-development`, `git-commits-prs`, `code-reviewer`, `brainstorming` и `caveman` тоже проверен SkillEvaluator (6/6). Он закрывает базовый цикл разработки: отладка, тесты перед кодом, коммиты/PR, ревью, мозговой штурм и краткий стиль ответа. Атрибуция — в `skills/STARTER6-ATTRIBUTION.md`.
+
 ## После установки
 
 ```powershell
