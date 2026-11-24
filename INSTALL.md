@@ -38,6 +38,8 @@ cd opencode-devkit
 
 Для чтения чужой кодовой базы доступны навыки `repository-analysis`, `exploring-code`, `analyzing-projects` и `code-explorer` — они только анализируют и не меняют репозиторий. Источники и атрибуция — в `skills/REPO-ANALYSIS-ATTRIBUTION.md`.
 
+Для работы с самими навыками есть `opencode-skill-creation`, `skill-doc-authoring` и `skill-creator`: создание по V2-конвенциям, короткая документация с хорошим триггером и управление установленными навыками. Все три прошли SkillEvaluator; происхождение и лицензии — в `skills/META-ATTRIBUTION.md`.
+
 ## После установки
 
 ```powershell

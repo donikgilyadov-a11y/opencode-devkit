@@ -9,7 +9,7 @@
 | Папка | Что внутри |
 | --- | --- |
 | `plugins/` | 6 локальных плагинов OpenCode: `brain-tools`, `graph-tools`, `autopilot-tools`, `computer-tools`, `audit-tools`, `session-audit-tools` |
-| `skills/` | 18 навыков: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer` |
+| `skills/` | 21 навык: `second-brain`, `opencode-tuner`, `md-examples`, `admin-panel`, `graph`, `autopilot`, `computer-use`, `repo-audit`, `obsidian`, `session-audit`, `react-expert`, `typescript-pro`, `react-best-practices`, `deep-research-lite`, `repository-analysis`, `exploring-code`, `analyzing-projects`, `code-explorer`, `opencode-skill-creation`, `skill-doc-authoring`, `skill-creator` |
 | `commands/` | 13 глобальных команд (`/brain`, `/oc-check`, `/oc-doctor`, `/repo-audit`, `/session-audit`, …) |
 | `agents/` | 2 подагента: `brain-keeper`, `oc-admin` |
 | `admin/` | Вторая админка на `http://127.0.0.1:8787` (дашборд, логи, безопасность, графы, проверки) |
@@ -121,6 +121,17 @@ skillevaluator validate ./skills --profile default --tiers 1 --checks schema,qua
 - `code-explorer` — детальное объяснение конкретной фичи: пути выполнения, слои, абстракции, границы доверенных данных и цитаты `file:line`.
 
 До установки все четыре прошли SkillEvaluator: `harness-check` — 4/4 загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 4/4 прошли (оценки 88.5–90.8). Источники, зафиксированные коммиты, лицензии и адаптации — в `skills/REPO-ANALYSIS-ATTRIBUTION.md`. Навыки дополняют `repo-audit` и не изменяют проверяемый репозиторий.
+
+## Мета-навыки
+
+Три внешних навыка для создания, документирования и управления файлами навыков тоже прошли гейт:
+`opencode-skill-creation` (создание по V2-конвенциям), `skill-doc-authoring` (короткий
+`SKILL.md` из SOP и надёжное описание-триггер), `skill-creator` (установка, список,
+обновление, удаление и диагностика загрузки). SkillEvaluator: `harness-check` — 3/3
+загружаются, `validate --tiers 1 --checks schema,quality --min-score 70` — 3/3 прошли,
+оценки B 89.0. Источники MIT зафиксированы по коммитам, атрибуция — в
+`skills/META-ATTRIBUTION.md`. В `opencode-skill-creation` пути адаптированы под
+`~/.config/opencode/skills` и Windows (`New-Item -ItemType SymbolicLink` вместо `ln -s`).
 
 ## CI/CD и релизы
 
