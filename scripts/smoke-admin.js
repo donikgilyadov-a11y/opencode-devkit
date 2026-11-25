@@ -41,6 +41,11 @@ function makeFixtures() {
   fs.writeFileSync(path.join(brain, "MEMORY.md"), "# Memory\n");
   fs.writeFileSync(path.join(brain, "graphs", "sample.mmd"), "graph LR\nA-->B\n");
   fs.writeFileSync(path.join(brain, "graphs", "sample.json"), '{"kind":"memory","nodes":2,"edges":1}');
+  const skills = path.join(tmp, "Desktop", "opencode-boost", "skills");
+  fs.mkdirSync(path.join(skills, "demo-skill"), { recursive: true });
+  fs.writeFileSync(path.join(skills, "demo-skill", "SKILL.md"), "---\nname: demo-skill\ndescription: Демо-навык для дымовой проверки.\n---\n\n# Demo Skill\n");
+  fs.writeFileSync(path.join(skills, "INDEX.md"), "# Индекс навыков\n");
+  fs.writeFileSync(path.join(skills, "TRIGGERS.md"), "# Триггеры навыков\n");
   const logDir = path.join(tmp, ".local", "share", "opencode", "log");
   fs.mkdirSync(logDir, { recursive: true });
   fs.writeFileSync(path.join(logDir, "opencode.log"), 'level=info message="smoke"\n');
@@ -121,6 +126,10 @@ async function main() {
     const quota = await get("/api/quota");
     add("/api/quota", quota.status === 200 && typeof quota.json?.exists === "boolean" && (!CI || quota.json.exists),
       `HTTP ${quota.status}, settings: ${quota.json?.exists}`);
+
+    const skillInfo = await get("/api/skills");
+    add("/api/skills", skillInfo.status === 200 && skillInfo.json?.errors === 0 && (CI ? skillInfo.json?.skills >= 1 : true) && skillInfo.json?.index === true && skillInfo.json?.triggers === true,
+      `HTTP ${skillInfo.status}, навыков: ${skillInfo.json?.skills ?? 0}, ошибок: ${skillInfo.json?.errors ?? "—"}`);
 
     const obs = await get("/api/obsidian");
     add("/api/obsidian", obs.status === 200 && typeof obs.json?.proxy?.listening === "boolean" && typeof obs.json?.rest?.listening === "boolean",

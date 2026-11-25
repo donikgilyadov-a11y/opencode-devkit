@@ -22,6 +22,8 @@ const STARTUP_LNK = path.join(process.env.APPDATA || path.join(process.env.USERP
   "Microsoft", "Windows", "Start Menu", "Programs", "Startup", "OpenCode Obsidian Proxy.lnk");
 const WATCHDOG_PID = path.join(__dirname, "..", "logs", "obsidian-proxy-watchdog.pid");
 const WATCHDOG_LOG = path.join(__dirname, "..", "logs", "obsidian-proxy-watchdog.log");
+const SKILLS = path.join(process.env.USERPROFILE || "", "Desktop", "opencode-boost", "skills");
+const SKILL_LINT = path.join(__dirname, "..", "scripts", "skill-lint.js");
 
 function redact(text) {
   return String(text)
@@ -139,6 +141,32 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === "/api/quota") {
     const exists = fs.existsSync(QUOTA_SETTINGS);
     return json(res, 200, { file: QUOTA_SETTINGS, exists, note: exists ? "Файл настроек найден" : "Используются значения по умолчанию" });
+  }
+
+  if (url.pathname === "/api/skills") {
+    return new Promise((resolve) => {
+      execFile(process.execPath, [SKILL_LINT, SKILLS, "--json"], {
+        timeout: 30000,
+        maxBuffer: 4 * 1024 * 1024,
+        windowsHide: true,
+      }, (err, stdout) => {
+        if (err && !stdout) return resolve(json(res, 500, { error: String(err.message || err).slice(0, 400) }));
+        try {
+          const lint = JSON.parse(stdout.trim());
+          return resolve(json(res, 200, {
+            dir: SKILLS,
+            skills: lint.skills,
+            errors: lint.errors,
+            warnings: lint.warnings,
+            findings: lint.findings || [],
+            index: fs.existsSync(path.join(SKILLS, "INDEX.md")),
+            triggers: fs.existsSync(path.join(SKILLS, "TRIGGERS.md")),
+          }));
+        } catch {
+          return resolve(json(res, 500, { error: "Не удалось разобрать отчёт линтера", raw: String(stdout || "").slice(0, 2000) }));
+        }
+      });
+    });
   }
 
   if (url.pathname === "/api/oc-check") {

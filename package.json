@@ -8,6 +8,7 @@
     "smoke": "node scripts/smoke-admin.js",
     "smoke:ci": "node scripts/smoke-admin.js --ci",
     "reaudit": "node scripts/reaudit.js",
+    "skill:lint": "node scripts/skill-lint.js",
     "install": "node install.js"
   }
 }

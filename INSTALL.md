@@ -90,6 +90,7 @@ Start-Process -FilePath 'C:\Program Files\nodejs\node.exe' `
 ## Проверки
 
 ```powershell
+& 'C:\Program Files\nodejs\npm.cmd' run skill:lint  # проверка 57 навыков INDEX/TRIGGERS
 & 'C:\Program Files\nodejs\npm.cmd' test
 & 'C:\Program Files\nodejs\npm.cmd' run smoke      # локальная админка должна быть запущена
 & 'C:\Program Files\nodejs\npm.cmd' run smoke:ci   # CI-режим: сервер и фикстуры поднимаются сами

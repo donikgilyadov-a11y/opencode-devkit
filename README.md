@@ -49,12 +49,17 @@ opencode plugin add @slkiser/opencode-quota@latest
 opencode plugin add opencode-v2-ponytail-scoped@latest
 ```
 
+## Порядок в навыках
+
+`skills/INDEX.md` группирует 57 навыков по назначению, `skills/TRIGGERS.md` задаёт приоритет при пересечении триггеров. `npm run skill:lint` проверяет frontmatter, kebab-case, H1, литерал `$ARGUMENTS`, посторонние символы и дубли описаний; результат — `skills=57 errors=0 warnings=0`. Во второй админке есть карточка «Навыки (линтер)» и endpoint `/api/skills`. Подробности — [страница вики](https://github.com/donikgilyadov-a11y/opencode-wiki/blob/main/wiki/skill-curation.md) и `brain/decisions/0005-skill-curation.md`.
+
 ## Проверка после установки
 
 ```powershell
 & 'C:\Program Files\nodejs\npm.cmd' test        # 29 юнит-тестов
-& 'C:\Program Files\nodejs\npm.cmd' run smoke      # 8 проверок админки (нужен запущенный сервер)
-& 'C:\Program Files\nodejs\npm.cmd' run smoke:ci   # 6 проверок + 2 SKIP, сервер поднимается сам
+& 'C:\Program Files\nodejs\npm.cmd' run smoke      # 9 проверок админки (нужен запущенный сервер)
+& 'C:\Program Files\nodejs\npm.cmd' run smoke:ci   # 7 проверок + 2 SKIP, сервер поднимается сам
+& 'C:\Program Files\nodejs\npm.cmd' run skill:lint  # 57 навыков: 0 ошибок, 0 предупреждений
 node scripts\oc-check.js --json                 # самопроверка сборки (20 проверок)
 ```
 
@@ -198,7 +203,7 @@ npx.cmd --yes github-actionlint .github\workflows\*.yml
 node scripts\release.js prepare 1.1.0 --dry-run
 ```
 
-Smoke в CI поднимает `admin/server.js` с тестовыми фикстурами на отдельном порту и пропускает `/api/data` и `/api/oc-check`, которым нужны OpenCode CLI и сервис на `:28894`. Локальный `npm run smoke` по-прежнему проверяет все 8 эндпоинтов работающей админки.
+Smoke в CI поднимает `admin/server.js` с тестовыми фикстурами на отдельном порту и пропускает `/api/data` и `/api/oc-check`, которым нужны OpenCode CLI и сервис на `:28894`. Локальный `npm run smoke` проверяет все 9 эндпоинтов работающей админки, включая `/api/skills`.
 
 ## Безопасность
 

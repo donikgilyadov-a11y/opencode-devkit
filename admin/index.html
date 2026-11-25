@@ -70,14 +70,15 @@
     <section class="card"><h2>Провайдеры</h2><ul id="providers"></ul></section>
     <section class="card"><h2>Графы</h2><ul id="graphs"></ul><p style="margin:10px 0 0"><a href="/graph.html">Открыть просмотр графов →</a></p></section>
     <section class="card"><h2>Самопроверка</h2><div id="checkResult">Нажми «Проверка»</div></section>
-    <section class="card"><h2>Пути</h2><pre>Конфиг: %USERPROFILE%\.config\opencode\opencode.jsonc
-Мозг:    %USERPROFILE%\Desktop\opencode-boost\brain
-Графы:   %USERPROFILE%\Desktop\opencode-boost\brain\graphs
-Логи:    %USERPROFILE%\.local\share\opencode\log\opencode.log</pre></section>
+    <section class="card"><h2>Пути</h2><pre>Конфиг: C:\Users\deda donik\.config\opencode\opencode.jsonc
+Мозг:    C:\Users\deda donik\Desktop\opencode-boost\brain
+Графы:   C:\Users\deda donik\Desktop\opencode-boost\brain\graphs
+Логи:    C:\Users\deda donik\.local\share\opencode\log\opencode.log</pre></section>
   </div>
 
   <div class="grid" style="margin-top:16px">
     <section class="card" id="plugins"><h2>Плагины (детали)</h2><div id="pluginDetail">загрузка…</div></section>
+    <section class="card" id="skills"><h2>Навыки (линтер)</h2><div id="skillInfo">загрузка…</div></section>
     <section class="card" id="safety"><h2>Безопасность и режимы</h2><div id="safetyInfo"></div></section>
     <section class="card" id="quota"><h2>Квоты</h2><div id="quotaInfo"></div></section>
     <section class="card" id="obsidian"><h2>Obsidian-мост</h2><div id="obsidianInfo"></div></section>
@@ -144,6 +145,11 @@ async function loadExtra(){
       kv("auto-resume", names.includes("auto-resume") ? "активен" : "нет", names.includes("auto-resume") ? "ok" : "err") +
       kv("ponytail", names.includes("ponytail") ? "установлен (off по умолчанию)" : "нет");
   }catch(e){ $("pluginDetail").innerHTML = `<span class="err">${e.message}</span>`; }
+  try{ const s = await (await fetch("/api/skills", {cache:"no-store"})).json(); $("skillInfo").innerHTML =
+      kv("Навыков", s.skills ?? "—") +
+      kv("Ошибок линтера", s.errors ?? "—", s.errors === 0 ? "ok" : "err") +
+      kv("Предупреждений", s.warnings ?? "—") +
+      kv("INDEX / TRIGGERS", (s.index && s.triggers) ? "есть" : "нет", (s.index && s.triggers) ? "ok" : "err"); }catch(e){ $("skillInfo").textContent = e.message; }
   try{ const q = await (await fetch("/api/quota", {cache:"no-store"})).json(); $("quotaInfo").innerHTML = kv("Настройки", q.exists ? "файл есть" : "по умолчанию") + kv("Путь", q.file); }catch(e){ $("quotaInfo").textContent = e.message; }
   try{ const o = await (await fetch("/api/obsidian", {cache:"no-store"})).json(); $("obsidianInfo").innerHTML =
       kv("Прокси 27125", o.proxy?.listening ? "работает" : "не отвечает", o.proxy?.listening ? "ok" : "err") +
